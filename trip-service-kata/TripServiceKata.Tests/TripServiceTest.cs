@@ -14,23 +14,17 @@ public class TripServiceTest
     private static readonly Trip.Trip TO_BRAZIL;
     private static readonly Trip.Trip TO_LONDON;
 
-    private static User.User _loggedInUser;
-
     private readonly TestableTripService _tripService;
 
     public TripServiceTest()
     {
         _tripService = new TestableTripService();
-        _loggedInUser = REGISTERED_USER;
     }
 
     [Fact]
     public void ShouldThrowAnExceptionWhenUserIsNotLoggedIn()
     {
-
-        _loggedInUser = GUEST;
-
-        Assert.Throws<UserNotLoggedInException>(() => _tripService.GetTripsByUser(null));
+        Assert.Throws<UserNotLoggedInException>(() => _tripService.GetTripsByUser(null, GUEST));
     }
 
     [Fact]
@@ -40,7 +34,7 @@ public class TripServiceTest
         friend.AddFriend(ANOTHER_USER);
         friend.AddTrip(TO_BRAZIL);
 
-        var friendTrips = _tripService.GetTripsByUser(friend);
+        var friendTrips = _tripService.GetTripsByUser(friend, REGISTERED_USER);
 
         Assert.Empty(friendTrips);
     }
@@ -53,18 +47,13 @@ public class TripServiceTest
         friend.AddTrip(TO_BRAZIL);
         friend.AddTrip(TO_LONDON);
 
-        var friendTrips = _tripService.GetTripsByUser(friend);
+        var friendTrips = _tripService.GetTripsByUser(friend, REGISTERED_USER);
 
         Assert.Equal(2, friendTrips.Count);
     }
 
     private class TestableTripService : TripService
     {
-        protected override User.User GetLoggedInUser()
-        {
-            return _loggedInUser;
-        }
-
         protected override List<Trip.Trip> TripsByUser(User.User user)
         {
             return user.Trips();
