@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TripServiceKata.Exception;
+﻿using TripServiceKata.Exception;
 using TripServiceKata.Trip;
 using Xunit;
 
@@ -14,11 +13,13 @@ public class TripServiceTest
     private static readonly Trip.Trip TO_BRAZIL;
     private static readonly Trip.Trip TO_LONDON;
 
-    private readonly TestableTripService _tripService;
+    private readonly Moq.Mock<TripDAO> _tripDAOMock;
+    private readonly TripService _tripService;
 
     public TripServiceTest()
     {
-        _tripService = new TestableTripService();
+        _tripDAOMock = new Moq.Mock<TripDAO>();
+        _tripService = new TripService(_tripDAOMock.Object);
     }
 
     [Fact]
@@ -47,16 +48,10 @@ public class TripServiceTest
         friend.AddTrip(TO_BRAZIL);
         friend.AddTrip(TO_LONDON);
 
+        _tripDAOMock.Setup(x => x.TripsByUser(friend)).Returns([TO_BRAZIL, TO_LONDON]);
+
         var friendTrips = _tripService.GetTripsByUser(friend, REGISTERED_USER);
 
         Assert.Equal(2, friendTrips.Count);
-    }
-
-    private class TestableTripService : TripService
-    {
-        protected override List<Trip.Trip> TripsByUser(User.User user)
-        {
-            return user.Trips();
-        }
     }
 }
