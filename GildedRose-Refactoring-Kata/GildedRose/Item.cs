@@ -6,95 +6,95 @@ public class Item
     public int SellIn { get; set; }
     public int Quality { get; set; }
 
-    private static void UpdateAgedBrieItemQuality(Item item)
+    private void UpdateAgedBrieItemQuality()
     {
-        if (item.Quality < 50)
+        if (Quality < 50)
         {
-            item.Quality = item.Quality + 1;
+            Quality = Quality + 1;
         }
 
-        item.SellIn = item.SellIn - 1;
+        SellIn = SellIn - 1;
 
-        if (item.SellIn < 0)
+        if (SellIn < 0)
         {
-            if (item.Quality < 50)
+            if (Quality < 50)
             {
-                item.Quality = item.Quality + 1;
+                Quality = Quality + 1;
             }
         }
     }
 
-    private static void UpdateBackstagePassesItemQuality(Item item)
+    private void UpdateBackstagePassesItemQuality()
     {
-        if (item.Quality < 50)
+        if (Quality < 50)
         {
-            item.Quality = item.Quality + 1;
+            Quality = Quality + 1;
 
-            if (item.SellIn < 11)
+            if (SellIn < 11)
             {
-                if (item.Quality < 50)
+                if (Quality < 50)
                 {
-                    item.Quality = item.Quality + 1;
+                    Quality = Quality + 1;
                 }
             }
 
-            if (item.SellIn < 6)
+            if (SellIn < 6)
             {
-                if (item.Quality < 50)
+                if (Quality < 50)
                 {
-                    item.Quality = item.Quality + 1;
+                    Quality = Quality + 1;
                 }
             }
         }
 
-        item.SellIn = item.SellIn - 1;
+        SellIn = SellIn - 1;
 
-        if (item.SellIn < 0)
+        if (SellIn < 0)
         {
-            item.Quality = item.Quality - item.Quality;
+            Quality = Quality - Quality;
         }
     }
 
-    private static void UpdateDefaultItemQuality(Item item)
+    private void UpdateDefaultItemQuality()
     {
-        if (item.Quality > 0)
+        if (Quality > 0)
         {
-            item.Quality = item.Quality - 1;
+            Quality = Quality - 1;
         }
 
-        item.SellIn = item.SellIn - 1;
+        SellIn = SellIn - 1;
 
-        if (item.SellIn < 0)
+        if (SellIn < 0)
         {
-            if (item.Quality > 0)
+            if (Quality > 0)
             {
-                item.Quality = item.Quality - 1;
+                Quality = Quality - 1;
             }
         }
     }
 
-    private static void UpdateSulfurasItemQuality(Item item)
+    private void UpdateSulfurasItemQuality()
     {
     }
 
-    public static void UpdateItemQuality(Item item)
+    public void UpdateItemQuality()
     {
-        if (item.Name == "Aged Brie")
+        if (Name == "Aged Brie")
         {
-            UpdateAgedBrieItemQuality(item);
+            UpdateAgedBrieItemQuality();
         }
-        else if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+        else if (Name == "Backstage passes to a TAFKAL80ETC concert")
 
         {
-            UpdateBackstagePassesItemQuality(item);
+            UpdateBackstagePassesItemQuality();
         }
-        else if (item.Name == "Sulfuras, Hand of Ragnaros")
+        else if (Name == "Sulfuras, Hand of Ragnaros")
         {
-            UpdateSulfurasItemQuality(item);
+            UpdateSulfurasItemQuality();
         }
         else
         {
-            UpdateDefaultItemQuality(item);
+            UpdateDefaultItemQuality();
         }
     }
 }

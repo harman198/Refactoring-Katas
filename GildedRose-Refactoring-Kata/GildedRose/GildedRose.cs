@@ -10,7 +10,7 @@ public class GildedRose(IList<Item> Items)
     {
         foreach (Item item in Items)
         {
-            Item.UpdateItemQuality(item);
+            item.UpdateItemQuality();
         }
     }
 }
