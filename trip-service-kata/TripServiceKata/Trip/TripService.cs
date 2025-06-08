@@ -2,35 +2,44 @@
 using TripServiceKata.Exception;
 using TripServiceKata.User;
 
-namespace TripServiceKata.Trip
+namespace TripServiceKata.Trip;
+
+public class TripService
 {
-    public class TripService
+    public List<Trip> GetTripsByUser(User.User user)
     {
-        public List<Trip> GetTripsByUser(User.User user)
+        List<Trip> tripList = new List<Trip>();
+        User.User loggedUser = GetLoggedInUser();
+        bool isFriend = false;
+        if (loggedUser != null)
         {
-            List<Trip> tripList = new List<Trip>();
-            User.User loggedUser = UserSession.GetInstance().GetLoggedUser();
-            bool isFriend = false;
-            if (loggedUser != null)
+            foreach (User.User friend in user.GetFriends())
             {
-                foreach(User.User friend in user.GetFriends())
+                if (friend.Equals(loggedUser))
                 {
-                    if (friend.Equals(loggedUser))
-                    {
-                        isFriend = true;
-                        break;
-                    }
+                    isFriend = true;
+                    break;
                 }
-                if (isFriend)
-                {
-                    tripList = TripDAO.FindTripsByUser(user);
-                }
-                return tripList;
             }
-            else
+            if (isFriend)
             {
-                throw new UserNotLoggedInException();
+                tripList = TripsByUser(user);
             }
+            return tripList;
         }
+        else
+        {
+            throw new UserNotLoggedInException();
+        }
+    }
+
+    protected virtual List<Trip> TripsByUser(User.User user)
+    {
+        return TripDAO.FindTripsByUser(user);
+    }
+
+    protected virtual User.User GetLoggedInUser()
+    {
+        return UserSession.GetInstance().GetLoggedUser();
     }
 }
